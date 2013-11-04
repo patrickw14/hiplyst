@@ -3,6 +3,10 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+# NOTE
+# CHANGE THIS TO WHATEVER THE ROOT URL OF THE SITE IS ON YOUR MACHINE
+ROOT_URL = '/home/patrick/hiplyst/'
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -12,7 +16,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/patrick/Desktop/hiplyst/database.db',                      # Or path to database file if using sqlite3.
+        'NAME': ROOT_URL + 'database.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -45,7 +49,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/home/patrick/Desktop/hiplyst/mymedia'
+MEDIA_ROOT = ROOT_URL + 'mymedia'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -64,7 +68,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    '/home/patrick/Desktop/hiplyst/static/',
+    ROOT_URL + 'static/',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -104,7 +108,7 @@ ROOT_URLCONF = 'hiplyst.urls'
 WSGI_APPLICATION = 'hiplyst.wsgi.application'
 
 TEMPLATE_DIRS = (
-    "/home/patrick/Desktop/hiplyst/templates/"
+    ROOT_URL + "templates/"
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
