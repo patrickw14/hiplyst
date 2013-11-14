@@ -53,4 +53,8 @@ def signup(request):
         #Now, log in user and redirect to home
         user = authenticate(username = username, password = password)
         auth_login(request, user)
-        return HttpResponseRedirect('/')
+        state = "You're successfully logged in!"
+        #return HttpResponseRedirect('/')
+        return render_to_response('login.html', {'error': error, 'username':username, 'state': state}, 
+                                          context_instance=RequestContext(request))
+
