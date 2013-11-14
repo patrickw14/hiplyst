@@ -18,11 +18,16 @@ def login(request):
         #we will use django's built in user auth system
         user = authenticate(username = username, password = password)
 	if user is not None:
+          if user.is_active:
             auth_login(request, user)
-            return HttpResponseRedirect('/')
+            #return HttpResponseRedirect('/')
+            state = "You're successfully logged in!"
+          else:
+            state = "Your account is not active, please contact the site admin."
         else:
-            error = True
-    return render_to_response('templates/login.html', {'error': error}, 
+            #error = True
+            state = "Your username and/or password are incorrect."
+    return render_to_response('login.html', {'error': error, 'username':username, 'state': state}, 
                                           context_instance=RequestContext(request))
 
 def logout(request):
