@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 def login(request):
     username = password = ''
     error = False
+    state = ''
     if request.POST:
         username = request.POST.get('username')
 	password = request.POST.get('password')
