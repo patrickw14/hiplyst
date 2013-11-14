@@ -10,8 +10,7 @@ from django.contrib.auth.models import User
 
 def login(request):
     username = password = ''
-    error = False
-    state = ''
+    loginFailed = False;
     if request.POST:
         username = request.POST.get('username')
 	password = request.POST.get('password')
@@ -21,14 +20,11 @@ def login(request):
 	if user is not None:
           if user.is_active:
             auth_login(request, user)
-            #return HttpResponseRedirect('/')
-            state = "You're successfully logged in!"
           else:
-            state = "Your account is not active, please contact the site admin."
+            loginFailed = True
         else:
-            #error = True
-            state = "Your username and/or password are incorrect."
-    return render_to_response('login.html', {'error': error, 'username':username, 'state': state}, 
+            loginFailed = True
+    return render_to_response('login.html', {'username':username, 'loginFailed': loginFailed}, 
                                           context_instance=RequestContext(request))
 
 def logout(request):
