@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Hiplyst</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="/media/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/static/docs/assets/ico/hiplist-favicon.jpg">
+    <link rel="shortcut icon" href="/static/docs/assets/ico/hiplist-favicon.png">
+  </head>
+
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="/" style="padding-top:4px;padding-bottom:4px;"><img src="/static/docs/assets/ico/hiplist-favicon.jpg" width="32" height="32" border="0"></a>
+          <!--<a class="brand" href="/">Hiplyst</a>-->
+          <div class="nav-collapse collapse">
+	    {% if user.is_authenticated %}
+            <form class="navbar-form pull-right">
+              <input class="span4" type="text" placeholder="Search (music, playlists, etc.)">
+            </form>
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a href="#user" class="dropdown-toggle" data-toggle="dropdown" style="color:white;margin-right:15px;"><font style="color:#999999;">Hey,</font> <u>{{ user.username }}</u></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#"><b><u>{{ user.username }}</u></b></a></li>
+                  <li><a href="#">Rep</a></li>
+                  <li><a href="#">Rank</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/user/profile">See profile...</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/accounts/password_reset">Settings</a></li>
+                  <li><a href="/logout/">Sign out</a></li>
+                </ul>
+              </li>
+            </ul>
+	    {% else %}
+            <!--<p class="navbar-text pull-right">
+	      <a href="#signUpModal" data-toggle="modal" style="color:orange;">Sign Up</a> | <a href="#logInModal" data-toggle="modal" style="color:white;">Log In</a>
+            </p>-->
+	    {% endif %}
+            <ul class="nav">
+              {% if user.is_authenticated %}
+              <li class="active"><a href="/">Home</a></li>
+              <li><a href="#">Create mix</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">My lists <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">My playlists</a></li>
+                  <li><a href="#">Liked playlists</a></li>
+                  <li><a href="#">Favorites</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Comments</a></li>
+                </ul>
+              </li>
+              {% else %}
+              {% endif %}
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Log In Modal -->
+    <div id="logInModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="LogInLabel" aria-hidden="true">
+      <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h3 id="LogInLabel">Log In</h3>
+      </div>
+      <div class="modal-body">
+        <form class="form-signin" method="post" action="/login/">
+          {% csrf_token %}
+          <h2 class="form-signin-heading">Please sign in</h2>
+          {% if error %}
+          <p>ERROR!</p>
+          {% endif %}
+          <input type="text" class="input-block-level" name="username" placeholder="Username">
+          <input type="password" class="input-block-level" name="password" placeholder="Password">
+          <button class="btn btn-large btn-primary" name="submit" type="submit">Sign in</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div id="signUpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="SignUpLabel" aria-hidden="true">
+      <div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	<h3 id="SignUpLabel">Sign Up</h3>
+      </div>
+      <div class="modal-body">
+        <form class="form-signin" method="post" action="/signup/">
+          {% csrf_token %}
+          <h2 class="form-signin-heading">Register</h2>
+          {% if error %}
+          <p>ERROR!</p>
+          {% endif %}
+          <input type="text" class="input-block-level" name="username" placeholder="Username">
+          <input type="password" class="input-block-level" name="password1" placeholder="Password">
+          <input type="password" class="input-block-level" name="password2" placeholder="Password confirmation">
+	  <br>
+	  <input type="text" class="input-block-level" name="email1" placeholder="Email">
+          <input type="text" class="input-block-level" name="email2" placeholder="Email confirmation">
+	  <!--<input type="text" class="input-block-level" name="fname" placeholder="First name">
+	  <input type="text" class="input-block-level" name="lname" placeholder="Last name">-->
+          <button class="btn btn-large btn-primary" name="submit" type="submit">Sign Up</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+      </div>
+    </div>
+
+  {% block content %}
+  <!-- Here is the html content for the specific page, except for the footer and toolbar. -->
+  {% endblock %}
+
+  <div class="container">
+    <hr>
+
+      <div class="footer">
+        <div class="pull-left">&copy; 2013. Built with love by <a href="https://twitter.com/pswilson14">Nick Roberts</a> and <a href="https://twitter.com/pswilson14">Patrick Wilson</a>.</div>
+        <div class="pull-right">Check out the source on <a href="http://www.github.com/patrickw14/hiplyst">GitHub</a>.</div>
+        </div>
+      </div>
+      <br>
+    </div> <!-- /container -->
+  </div>
+
+  
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/static/js/bootstrap-transition.js"></script>
+    <script src="/static/js/bootstrap-alert.js"></script>
+    <script src="/static/js/bootstrap-modal.js"></script>
+    <script src="/static/js/bootstrap-dropdown.js"></script>
+    <script src="/static/js/bootstrap-scrollspy.js"></script>
+    <script src="/static/js/bootstrap-tab.js"></script>
+    <script src="/static/js/bootstrap-tooltip.js"></script>
+    <script src="/static/js/bootstrap-popover.js"></script>
+    <script src="/static/js/bootstrap-button.js"></script>
+    <script src="/static/js/bootstrap-collapse.js"></script>
+    <script src="/static/js/bootstrap-carousel.js"></script>
+    <script src="/static/js/bootstrap-typeahead.js"></script>
+  </body>
+</html>

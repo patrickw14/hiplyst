@@ -1,0 +1,39 @@
+{% extends "accounts/base.html" %}
+
+{% block content %}
+<div class="container">
+
+{% if form.errors %}
+  <div class="row span3 offset4">
+    <div class="alert">
+	  <button type="button" class="close" data-dismiss="alert">&times;</button>
+	  <strong>Login failed.</strong> Incorrect username or password was entered.
+    </div>
+  </div>
+{% endif %}
+      
+<form action="{% url 'django.contrib.auth.views.login' %}" method="post">
+<div class="row span4 offset4">
+  {% csrf_token %}
+  <p>
+    <label for="id_username"></label>
+    <input id="id_username" type="text" name="username" maxlength="254" placeholder="Username">
+  </p>
+  <p>
+    <label for="id_password"></label>
+    <input id="id_password" type="password" name="password" maxlength="4096" placeholder="Password">
+  </p>
+  <!--{% for field in form %}
+  <p>
+    {{ field.errors }}
+    {{ field.label_tag }}
+    {{ field }}
+  </p>
+  {% endfor %}-->
+  <p><button class="btn btn-large btn-primary" name="submit" type="submit">Sign in</button></p>
+  <input type="hidden" name="next" value="{{ next }}" />
+</div>
+</form>
+
+</div>
+{% endblock %}
