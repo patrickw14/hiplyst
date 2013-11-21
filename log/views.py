@@ -1,57 +1,67 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, render_to_response
-from django import forms
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render, render_to_response, get_object_or_404
 from datetime import datetime
 from django.template import RequestContext
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
-from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.models import User
+from log.forms import UserCreationForm
+from django.contrib.auth.tokens import default_token_generator
+from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.utils.http import urlquote, base36_to_int
+from django.contrib.sites.models import Site
 
-def login(request):
-    username = password = ''
-    loginFailed = False;
-    if request.POST:
-        username = request.POST.get('username')
-	password = request.POST.get('password')
+def signup(request, template_name='registration/signup.html', 
+           email_template_name='registration/signup_email.html',
+           signup_form=UserCreationForm,
+           token_generator=default_token_generator,
+           post_signup_redirect=None):
+    if post_signup_redirect is None:
+        post_signup_redirect = reverse('log.views.signup_done')
+    if request.method == "POST":
+        form = signup_form(request.POST)
+        if form.is_valid():
+            opts = {}
+            opts['use_https'] = request.is_secure()
+            opts['token_generator'] = token_generator
+            opts['email_template_name'] = email_template_name
+            if not Site._meta.installed:
+                opts['domain_override'] = RequestSite(request).domain
+            form.save(**opts)
+            return HttpResponseRedirect(post_signup_redirect)
+    else:
+        form = signup_form()
+    return render_to_response(template_name, {'form': form,}, 
+                              context_instance=RequestContext(request))
 
-        #we will use django's built in user auth system
-        user = authenticate(username = username, password = password)
-	if user is not None:
-          if user.is_active:
-            auth_login(request, user)
-          else:
-            loginFailed = True
-        else:
-            loginFailed = True
-    return render_to_response('login.html', {'username':username, 'loginFailed': loginFailed}, 
-                                          context_instance=RequestContext(request))
+def signup_done(request, template_name='registration/signup_done.html'):
+    return render_to_response(template_name, 
+                              context_instance=RequestContext(request))
 
-def logout(request):
-    auth_logout(request)
-    return HttpResponseRedirect('/')
+def signup_confirm(request, uidb36=None, token=None,
+                   token_generator=default_token_generator,
+                   post_signup_redirect=None):
+    assert uidb36 is not None and token is not None #checked par url
+    if post_signup_redirect is None:
+        post_signup_redirect = reverse('log.views.signup_complete')
+    try:
+        uid_int = base36_to_int(uidb36)
+    except ValueError:
+        raise Http404
 
-# TODO - Error handling mechanisms
-def signup(request):
-    username = password = email = fname = lname = ""
-    error = False
-    if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        email = request.POST.get('email')
-        fname = request.POST.get('fname')
-        lname = request.POST.get('lname')
+    user = get_object_or_404(User, id=uid_int)
+    context_instance = RequestContext(request)
 
-        user = User.objects.create_user(username, email, password)
-        user.first_name = fname
-        user.last_name = lname
+    if token_generator.check_token(user, token):
+        context_instance['validlink'] = True
+        user.is_active = True
         user.save()
+    else:
+        context_instance['validlink'] = False
+    return HttpResponseRedirect(post_signup_redirect)
 
-        #Now, log in user and redirect to home
-        user = authenticate(username = username, password = password)
-        auth_login(request, user)
-        state = "You're successfully logged in!"
-        #return HttpResponseRedirect('/')
-        return render_to_response('login.html', {'error': error, 'username':username, 'state': state}, 
-                                          context_instance=RequestContext(request))
+def signup_complete(request, template_name='registration/signup_complete.html'):
+    return render_to_response(template_name, 
+                              context_instance=RequestContext(request, 
+                                                              {'login_url': settings.LOGIN_URL}))
+
 
