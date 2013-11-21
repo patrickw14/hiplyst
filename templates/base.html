@@ -25,8 +25,8 @@
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/ico/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="/static/ico/apple-touch-icon-57-precomposed.png">
-    <link rel="shortcut icon" href="/static/ico/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="/static/docs/assets/ico/hiplist-favicon.jpg">
+    <link rel="shortcut icon" href="/static/docs/assets/ico/hiplist-favicon.png">
   </head>
 
   <body>
@@ -38,17 +38,49 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="/">Hiplyst</a>
+          <a class="brand" href="/" style="padding-top:4px;padding-bottom:4px;"><img src="/static/docs/assets/ico/hiplist-favicon.jpg" width="32" height="32" border="0"></a>
+          <!--<a class="brand" href="/">Hiplyst</a>-->
           <div class="nav-collapse collapse">
-	    <p class="navbar-text pull-right">
 	    {% if user.is_authenticated %}
-	      Hey, <a href="#user">{{ user.username }}</a>! | <a href="/logout/">Log Out</a>
+            <form class="navbar-form pull-right">
+              <input class="span4" type="text" placeholder="Search (music, playlists, etc.)">
+            </form>
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a href="#user" class="dropdown-toggle" data-toggle="dropdown" style="color:white;margin-right:15px;"><font style="color:#999999;">Hey,</font> <u>{{ user.username }}</u></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#"><b><u>{{ user.username }}</u></b></a></li>
+                  <li><a href="#">Rep</a></li>
+                  <li><a href="#">Rank</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/user/profile">See profile...</a></li>
+                  <li class="divider"></li>
+                  <li><a href="/accounts/password_reset">Settings</a></li>
+                  <li><a href="/logout/">Sign out</a></li>
+                </ul>
+              </li>
+            </ul>
 	    {% else %}
-	      <a href="#signUpModal" data-toggle="modal">Sign Up</a> | <a href="#logInModal" data-toggle="modal">Log In</a>
+            <p class="navbar-text pull-right">
+	      <a href="#signUpModal" data-toggle="modal" style="color:orange;">Sign Up</a> | <a href="#logInModal" data-toggle="modal" style="color:white;">Log In</a>
+            </p>
 	    {% endif %}
-	    </p>
             <ul class="nav">
+              {% if user.is_authenticated %}
               <li class="active"><a href="/">Home</a></li>
+              <li><a href="#">Create mix</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">My lists <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">My playlists</a></li>
+                  <li><a href="#">Liked playlists</a></li>
+                  <li><a href="#">Favorites</a></li>
+                  <li class="divider"></li>
+                  <li><a href="#">Comments</a></li>
+                </ul>
+              </li>
+              {% else %}
+              {% endif %}
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -92,11 +124,13 @@
           <p>ERROR!</p>
           {% endif %}
           <input type="text" class="input-block-level" name="username" placeholder="Username">
-          <input type="password" class="input-block-level" name="password" placeholder="Password">
+          <input type="password" class="input-block-level" name="password1" placeholder="Password">
+          <input type="password" class="input-block-level" name="password2" placeholder="Password confirmation">
 	  <br>
-	  <input type="text" class="input-block-level" name="email" placeholder="Email address">
-	  <input type="text" class="input-block-level" name="fname" placeholder="First name">
-	  <input type="text" class="input-block-level" name="lname" placeholder="Last name">
+	  <input type="text" class="input-block-level" name="email1" placeholder="Email">
+          <input type="text" class="input-block-level" name="email2" placeholder="Email confirmation">
+	  <!--<input type="text" class="input-block-level" name="fname" placeholder="First name">
+	  <input type="text" class="input-block-level" name="lname" placeholder="Last name">-->
           <button class="btn btn-large btn-primary" name="submit" type="submit">Sign Up</button>
         </form>
       </div>
