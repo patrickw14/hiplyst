@@ -5,13 +5,21 @@ TEMPLATE_DEBUG = DEBUG
 
 # NOTE
 # CHANGE THIS TO WHATEVER THE ROOT URL OF THE SITE IS ON YOUR MACHINE
-ROOT_URL = '/home/patrick/hiplyst/'
+ROOT_URL = '/Users/narobert/hiplyst/hiplyst/'
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
 MANAGERS = ADMINS
+
+LOGIN_REDIRECT_URL = '/'
+
+EMAIL_HOST='smtp.gmail.com'                                                                                                                                           
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'narobert1370@gmail.com'
+EMAIL_HOST_PASSWORD = 'Jr94oo2Jr94oo2'
 
 DATABASES = {
     'default': {
@@ -60,7 +68,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = '/home/patrick/static/'
+STATIC_ROOT = '/Users/narobert/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -122,9 +130,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'home',
+    'accounts',
+    'log',
 )
 
 # A sample logging configuration. The only tangible logging
